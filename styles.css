@@ -277,6 +277,9 @@ body {
 .markdown-body td {
     padding: 6px 13px;
     border: 1px solid var(--border-color);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
 }
 
 .markdown-body tr:nth-child(even) {

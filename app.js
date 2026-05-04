@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     const fileListElement = document.getElementById('file-list');
     const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+    const fontDecreaseBtn = document.getElementById('font-decrease-btn');
+    const fontIncreaseBtn = document.getElementById('font-increase-btn');
+    const fontSizeDisplay = document.getElementById('font-size-display');
     const editModeBtn = document.getElementById('edit-mode-btn');
     const previewModeBtn = document.getElementById('preview-mode-btn');
     const editorContainer = document.getElementById('editor-container');
@@ -17,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeFileIndex = -1;
     let isEditMode = false;
     let currentFileContent = '';
+    let currentFontSize = 16;
 
     // marked.js の設定
     marked.setOptions({
@@ -43,6 +47,30 @@ document.addEventListener('DOMContentLoaded', () => {
             sidebar.classList.toggle('collapsed');
         }
     });
+
+    // フォントサイズ変更機能
+    function updateFontSize() {
+        markdownBody.style.fontSize = `${currentFontSize}px`;
+        markdownEditor.style.fontSize = `${currentFontSize}px`;
+        fontSizeDisplay.textContent = `${currentFontSize}px`;
+    }
+
+    fontDecreaseBtn.addEventListener('click', () => {
+        if (currentFontSize > 10) {
+            currentFontSize -= 2;
+            updateFontSize();
+        }
+    });
+
+    fontIncreaseBtn.addEventListener('click', () => {
+        if (currentFontSize < 40) {
+            currentFontSize += 2;
+            updateFontSize();
+        }
+    });
+
+    // 初期フォントサイズを反映
+    updateFontSize();
 
     // フォルダ選択ボタンのクリック
     folderBtn.addEventListener('click', () => {

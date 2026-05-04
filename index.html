@@ -16,6 +16,11 @@
                 <button id="toggle-sidebar-btn" class="btn secondary" style="padding: 0.5rem; display: flex; align-items: center; justify-content: center;" title="ファイル一覧の開閉">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
+                <div class="font-size-controls" style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; height: 36px; margin-right: 4px;">
+                    <button id="font-decrease-btn" class="btn secondary" style="border-radius: 0; border: none; height: 100%; padding: 0 0.5rem;" title="文字を小さく">-</button>
+                    <span id="font-size-display" style="padding: 0 0.5rem; font-size: 0.875rem; background: var(--secondary-bg); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); height: 100%; display: flex; align-items: center; justify-content: center; min-width: 3rem;">16px</span>
+                    <button id="font-increase-btn" class="btn secondary" style="border-radius: 0; border: none; height: 100%; padding: 0 0.5rem;" title="文字を大きく">+</button>
+                </div>
                 <button id="edit-mode-btn" class="btn secondary hidden">編集</button>
                 <button id="preview-mode-btn" class="btn secondary hidden">プレビュー</button>
                 <input type="file" id="file-input" accept=".md" multiple hidden>
