@@ -8,9 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     const fileListElement = document.getElementById('file-list');
     const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+    const editModeBtn = document.getElementById('edit-mode-btn');
+    const previewModeBtn = document.getElementById('preview-mode-btn');
+    const editorContainer = document.getElementById('editor-container');
+    const markdownEditor = document.getElementById('markdown-editor');
 
     let filesData = [];
     let activeFileIndex = -1;
+    let isEditMode = false;
+    let currentFileContent = '';
 
     // marked.js の設定
     marked.setOptions({
@@ -139,8 +145,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadFileContent(file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-            const content = e.target.result;
-            renderMarkdown(content);
+            currentFileContent = e.target.result;
+            
+            // UI更新
+            editModeBtn.classList.remove('hidden');
+            previewModeBtn.classList.add('hidden');
+            isEditMode = false;
+            
+            renderMarkdown(currentFileContent);
         };
         reader.readAsText(file);
     }
@@ -152,16 +164,143 @@ document.addEventListener('DOMContentLoaded', () => {
         markdownBody.innerHTML = html;
         
         dropZone.classList.add('hidden');
+        editorContainer.classList.add('hidden');
         markdownBody.classList.remove('hidden');
 
         document.querySelectorAll('pre code').forEach((block) => {
             hljs.highlightElement(block);
         });
 
+        makeTablesResizable();
+
         // スムーズにトップへスクロール
         const viewer = document.querySelector('.viewer-container');
         if (viewer) {
             viewer.scrollTo({ top: 0, behavior: 'smooth' });
         }
+    }
+
+    // 編集・プレビューモード切り替え
+    editModeBtn.addEventListener('click', () => {
+        isEditMode = true;
+        editModeBtn.classList.add('hidden');
+        previewModeBtn.classList.remove('hidden');
+        
+        markdownBody.classList.add('hidden');
+        editorContainer.classList.remove('hidden');
+        
+        markdownEditor.value = currentFileContent;
+    });
+
+    previewModeBtn.addEventListener('click', () => {
+        isEditMode = false;
+        previewModeBtn.classList.add('hidden');
+        editModeBtn.classList.remove('hidden');
+        
+        currentFileContent = markdownEditor.value;
+        renderMarkdown(currentFileContent);
+    });
+
+    // テキスト挿入ヘルパー
+    function insertTextAtCursor(textarea, prefix, suffix, defaultText) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        const selectedText = text.substring(start, end) || defaultText;
+        
+        const replacement = prefix + selectedText + suffix;
+        textarea.value = text.substring(0, start) + replacement + text.substring(end);
+        
+        textarea.focus();
+        textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
+        
+        // 保存用に内容を更新
+        currentFileContent = textarea.value;
+    }
+
+    document.getElementById('btn-bold').addEventListener('click', () => {
+        insertTextAtCursor(markdownEditor, '**', '**', '太字');
+    });
+
+    document.getElementById('btn-h1').addEventListener('click', () => {
+        insertTextAtCursor(markdownEditor, '# ', '', '見出し1');
+    });
+
+    document.getElementById('btn-h2').addEventListener('click', () => {
+        insertTextAtCursor(markdownEditor, '## ', '', '見出し2');
+    });
+
+    document.getElementById('btn-table').addEventListener('click', () => {
+        const tableTemplate = `\n| 列1 | 列2 | 列3 |\n| --- | --- | --- |\n| 内容 | 内容 | 内容 |\n`;
+        insertTextAtCursor(markdownEditor, '', tableTemplate, '');
+    });
+
+    document.getElementById('btn-save').addEventListener('click', () => {
+        if (activeFileIndex === -1) return;
+        
+        const content = isEditMode ? markdownEditor.value : currentFileContent;
+        const fileName = filesData[activeFileIndex].name.split('/').pop();
+        
+        const blob = new Blob([content], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        currentFileContent = content;
+    });
+
+    // テーブルのリサイズ機能
+    function makeTablesResizable() {
+        const tables = document.querySelectorAll('.markdown-body table');
+        tables.forEach(table => {
+            if (table.classList.contains('resizable')) return;
+            table.classList.add('resizable');
+
+            const headers = Array.from(table.querySelectorAll('th'));
+            
+            headers.forEach(th => {
+                th.style.width = window.getComputedStyle(th).width;
+            });
+            table.style.width = window.getComputedStyle(table).width;
+            table.style.tableLayout = 'fixed';
+            
+            headers.forEach((th) => {
+                const resizer = document.createElement('div');
+                resizer.classList.add('resizer');
+                th.appendChild(resizer);
+
+                let startX, startWidth, startTableWidth;
+
+                const onMouseDown = function(e) {
+                    startX = e.clientX;
+                    startWidth = parseInt(window.getComputedStyle(th).width, 10);
+                    startTableWidth = parseInt(window.getComputedStyle(table).width, 10);
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                    resizer.classList.add('resizing');
+                };
+
+                const onMouseMove = function(e) {
+                    const dx = e.clientX - startX;
+                    th.style.width = `${startWidth + dx}px`;
+                    table.style.width = `${startTableWidth + dx}px`;
+                };
+
+                const onMouseUp = function() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                    resizer.classList.remove('resizing');
+                };
+
+                resizer.addEventListener('mousedown', onMouseDown);
+            });
+        });
     }
 });

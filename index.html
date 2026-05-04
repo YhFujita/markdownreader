@@ -16,6 +16,8 @@
                 <button id="toggle-sidebar-btn" class="btn secondary" style="padding: 0.5rem; display: flex; align-items: center; justify-content: center;" title="ファイル一覧の開閉">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
+                <button id="edit-mode-btn" class="btn secondary hidden">編集</button>
+                <button id="preview-mode-btn" class="btn secondary hidden">プレビュー</button>
                 <input type="file" id="file-input" accept=".md" multiple hidden>
                 <input type="file" id="folder-input" webkitdirectory hidden>
                 <button id="select-btn" class="btn primary">ファイル追加</button>
@@ -45,6 +47,19 @@
                     <p>ここにMarkdownファイルをドロップ</p>
                 </div>
             </div>
+
+            <div id="editor-container" class="editor-container hidden">
+                <div class="editor-toolbar">
+                    <button id="btn-bold" class="btn secondary" title="太字"><strong>B</strong></button>
+                    <button id="btn-h1" class="btn secondary" title="見出し1">H1</button>
+                    <button id="btn-h2" class="btn secondary" title="見出し2">H2</button>
+                    <button id="btn-table" class="btn secondary" title="表の挿入">Table</button>
+                    <div class="spacer"></div>
+                    <button id="btn-save" class="btn primary" title="保存">保存</button>
+                </div>
+                <textarea id="markdown-editor" class="markdown-editor" placeholder="Markdownを入力してください..."></textarea>
+            </div>
+
             <article id="markdown-body" class="markdown-body hidden">
                 <!-- 変換されたMarkdownがここに挿入されます -->
             </article>

@@ -212,6 +212,7 @@ body {
     max-width: 800px;
     margin: 0 auto;
     padding-bottom: 4rem;
+    overflow-x: auto;
 }
 
 .markdown-body h1, 
@@ -293,4 +294,62 @@ body {
     font-size: 0.75rem;
     color: var(--muted-color);
     border-top: 1px solid var(--border-color);
+}
+
+/* Editor Styling */
+.editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-color);
+}
+
+.editor-toolbar {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--secondary-bg);
+    border-bottom: 1px solid var(--border-color);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.editor-toolbar .spacer {
+    flex-grow: 1;
+}
+
+.markdown-editor {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    resize: none;
+    background-color: transparent;
+    color: var(--text-color);
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    outline: none;
+}
+
+/* Table Resizing */
+.markdown-body th {
+    position: relative;
+}
+
+.resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 100%;
+    cursor: col-resize;
+    user-select: none;
+    z-index: 1;
+}
+
+.resizer:hover, .resizer.resizing {
+    background-color: var(--primary-color);
+    opacity: 0.5;
 }
