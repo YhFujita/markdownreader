@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Reader - プレビュー</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- highlight.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Markdown Reader</h1>
+            <div class="controls">
+                <button id="toggle-sidebar-btn" class="btn secondary" style="padding: 0.5rem; display: flex; align-items: center; justify-content: center;" title="ファイル一覧の開閉">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <input type="file" id="file-input" accept=".md" multiple hidden>
+                <input type="file" id="folder-input" webkitdirectory hidden>
+                <button id="select-btn" class="btn primary">ファイル追加</button>
+                <button id="folder-btn" class="btn secondary">フォルダ追加</button>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="sidebar hidden" id="sidebar">
+                <div class="sidebar-header">
+                    <h2>ファイル一覧</h2>
+                </div>
+                <ul id="file-list" class="file-list">
+                    <!-- ファイルリストがここに挿入されます -->
+                </ul>
+            </aside>
+
+        <main class="viewer-container">
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-message">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <polyline points="9 15 12 12 15 15"></polyline>
+                    </svg>
+                    <p>ここにMarkdownファイルをドロップ</p>
+                </div>
+            </div>
+            <article id="markdown-body" class="markdown-body hidden">
+                <!-- 変換されたMarkdownがここに挿入されます -->
+            </article>
+        </main>
+        </div>
+
+        <footer class="app-footer">
+            <p>&copy; 2026 Markdown Reader</p>
+        </footer>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
